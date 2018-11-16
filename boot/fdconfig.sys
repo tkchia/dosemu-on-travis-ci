@@ -1,0 +1,2 @@
+lastdrive=z
+shell=c:\comcom32.exe /e:1024 /k c:\autoexec.bat
