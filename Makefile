@@ -44,7 +44,7 @@ install:
 	-cp -a /usr/share/dosemu/dosemu2-cmds-[0-9].[0-9]/dosemu/*.com \
 	    boot/dosemu/
 	until (echo; echo; echo; echo; echo; echo exitemu) | \
-	    dosemu.bin -I 'video {none} keyboard {layout us}' -i"`pwd`"/boot \
+	    dosemu.bin -I 'video {none} keyboard {layout us}' -i"`pwd`"/boot; \
 		do true; done
 	@# Do a quick test to see if dosemu2 works as expected.
 	dosemu.bin -I 'video {none} keyboard {layout us}' -p -K \
