@@ -30,24 +30,15 @@ install:
 	@# Prime the dosemu2 installation, using the ./boot/ directory as the
 	@# boot drive (C:).
 	@#
-	@# For some reason,
-	@#   * dosemu.bin may fail to create a symlink for a separate "drive"
-	@#     containing the dosemu VM programs, e.g. exitemu, so we need to
-	@#     copy these to the boot "Drive"; or
-	@#   * dosemu.bin may segfault the first time it tries to set up
-	@#     ~/.dosemu/ .
-	@#
-	@# Hopefully I or someone else can get these problems fixed in the
-	@# future...
+	@# Currently, dosemu.bin may segfault the first time it tries to set
+	@# up ~/.dosemu/ (https://github.com/stsp/dosemu2/pull/715).  The
+	@# `until' loop tries to work around this.
 	rm -rf ~/.dosemu
-	mkdir -p boot/dosemu
-	-cp -a /usr/share/dosemu/dosemu2-cmds-[0-9].[0-9]/dosemu/*.com \
-	    boot/dosemu/
 	until (echo; echo; echo; echo; echo; echo exitemu) | \
-	    dosemu.bin -I 'video {none} keyboard {layout us}' -i"`pwd`"/boot; \
+	    dosemu.bin -I 'video {none}' -i"`pwd`"/boot; \
 		do true; done
 	@# Do a quick test to see if dosemu2 works as expected.
-	dosemu.bin -I 'video {none} keyboard {layout us}' -p -K \
-	    boot/dosemu/isemu.com
+	dosemu.bin -I 'video {none}' -p -K boot/hello.com | \
+	    fgrep 'Hello world!'
 
 .PHONY: install

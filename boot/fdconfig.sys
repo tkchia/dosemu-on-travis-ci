@@ -1,2 +1,3 @@
 lastdrive=z
-shell=c:\comcom32.exe /e:1024 /k c:\autoexec.bat
+device=d:\dosemu\emufs.sys
+shell=c:\comcom32.exe /e:1024 /k d:\autoexec.bat
