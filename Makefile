@@ -25,16 +25,18 @@ install:
 	sudo add-apt-repository -y ppa:dosemu2/ppa
 	sudo apt-get update -y
 	sudo apt-get install -y dosemu2 fdpp
+	dosemu.bin --version
 	dpkg -L dosemu2
 	dpkg -L fdpp
 	@# Prime the dosemu2 installation, using the ./boot/ directory as the
 	@# boot drive (C:).
-	rm -rf ~/.dosemu
 	until \
-	   (echo; echo; echo; echo; echo; echo exitemu) | \
-	    DOSEMU2_FREEDOS_DIR="`pwd`"/boot dosemu.bin -I 'video {none}' || \
-	   (echo; echo; echo; echo; echo; echo exitemu) | \
-	    dosemu.bin -I 'video {none}' -i"`pwd`"/boot; \
+	    rm -rf ~/.dosemu &&
+	    (echo; echo; echo; echo; echo; echo exitemu) | \
+	     DOSEMU2_FREEDOS_DIR="`pwd`"/boot dosemu.bin -I 'video {none}' || \
+	    rm -rf ~/.dosemu &&
+	    (echo; echo; echo; echo; echo; echo exitemu) | \
+	     dosemu.bin -I 'video {none}' -i"`pwd`"/boot; \
 		do true; done
 	@# Do a quick test to see if dosemu2 works as expected.
 	dosemu.bin -I 'video {none}' -p -K boot/hello.com | \
