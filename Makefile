@@ -47,7 +47,7 @@ install:
 	     dosemu.bin -I 'video {none}' -i"`pwd`"/boot; \
 		do true; done
 	@# Do a quick test to see if dosemu2 works as expected.
-	dosemu.bin -I 'video {none}' -p -K boot/hello.com | \
+	dosemu.bin -I 'video {none}' -p -K hello.com | \
 	    fgrep 'Hello world!'
 
 .PHONY: install
