@@ -14,6 +14,9 @@
 # along with this program; ; see the file COPYING.  If not see
 # <http://www.gnu.org/licenses/>.
 
+prefix = $(HOME)/.local
+boot_dest = $(prefix)/dosemu-on-travis-ci/boot
+
 install:
 	@# Install Andrew Bird et al.'s packages for dosemu2 and fdpp (FreeDOS
 	@# plus plus).
@@ -28,7 +31,12 @@ install:
 	dosemu.bin --version
 	dpkg -L dosemu2
 	dpkg -L fdpp
-	@# Prime the dosemu2 installation, using the ./boot/ directory as the
+	@# Copy out our ./boot/ directory to the installation target directory
+	@# (currently set to be somewhere in the user home directory).
+	rm -rf $(boot_dest)
+	mkdir -p $(boot_dest)
+	cp -a boot/* $(boot_dest)
+	@# Prime the dosemu2 installation, using the "boot" directory as the
 	@# boot drive (C:).
 	@#
 	@# Stas Sergeev in Nov 2018 (https://github.com/stsp/dosemu2/commit/
@@ -40,11 +48,11 @@ install:
 	until \
 	    rm -rf ~/.dosemu && \
 	    (echo; echo; echo; echo; echo; echo exitemu) | \
-	     DOSEMU2_FREEDOS_DIR="`pwd`"/boot dosemu.bin -I 'video {none}' || \
+	     DOSEMU2_FREEDOS_DIR=$(boot_dest) dosemu.bin -I 'video {none}' || \
 	    rm -rf ~/.dosemu && \
-	    ln -sf /usr/share/fdpp/fdppkrnl.sys boot/fdppkrnl.sys && \
+	    ln -sf /usr/share/fdpp/fdppkrnl.sys $(boot_dest)/fdppkrnl.sys && \
 	    (echo; echo; echo; echo; echo; echo exitemu) | \
-	     dosemu.bin -I 'video {none}' -i"`pwd`"/boot; \
+	     dosemu.bin -I 'video {none}' -i$(boot_dest); \
 		do true; done
 	@# Do a quick test to see if dosemu2 works as expected.
 	dosemu.bin -I 'video {none}' -p -K hello.com | \
