@@ -31,10 +31,10 @@ install:
 	@# Prime the dosemu2 installation, using the ./boot/ directory as the
 	@# boot drive (C:).
 	until \
-	    rm -rf ~/.dosemu &&
+	    rm -rf ~/.dosemu && \
 	    (echo; echo; echo; echo; echo; echo exitemu) | \
 	     DOSEMU2_FREEDOS_DIR="`pwd`"/boot dosemu.bin -I 'video {none}' || \
-	    rm -rf ~/.dosemu &&
+	    rm -rf ~/.dosemu && \
 	    (echo; echo; echo; echo; echo; echo exitemu) | \
 	     dosemu.bin -I 'video {none}' -i"`pwd`"/boot; \
 		do true; done
