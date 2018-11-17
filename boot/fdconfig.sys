@@ -1,3 +1,6 @@
 lastdrive=z
 device=d:\dosemu\emufs.sys
 shell=c:\comcom32.exe /e:1024 /k d:\autoexec.bat
+rem temporary hack to get dosemu -E/-K working with comcom32.exe --- dosemu
+rem needs %COMSPEC% but comcom32.exe does not set it
+set=COMSPEC=c:\comcom32.exe
