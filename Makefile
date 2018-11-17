@@ -29,12 +29,11 @@ install:
 	dpkg -L fdpp
 	@# Prime the dosemu2 installation, using the ./boot/ directory as the
 	@# boot drive (C:).
-	@#
-	@# Currently, dosemu.bin may segfault the first time it tries to set
-	@# up ~/.dosemu/ (https://github.com/stsp/dosemu2/pull/715).  The
-	@# `until' loop tries to work around this.
 	rm -rf ~/.dosemu
-	until (echo; echo; echo; echo; echo; echo exitemu) | \
+	until \
+	   (echo; echo; echo; echo; echo; echo exitemu) | \
+	    DOSEMU2_FREEDOS_DIR="`pwd`"/boot dosemu.bin -I 'video {none}' || \
+	   (echo; echo; echo; echo; echo; echo exitemu) | \
 	    dosemu.bin -I 'video {none}' -i"`pwd`"/boot; \
 		do true; done
 	@# Do a quick test to see if dosemu2 works as expected.
