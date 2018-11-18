@@ -55,9 +55,9 @@ install:
 	     dosemu.bin -I 'video {none}' -i$(boot_dest); \
 		do true; done
 	@# Do some quick tests to see if dosemu2 works as expected.
-	dosemu.bin -I 'video {none}' -q -K hello.com | \
-	    fgrep 'Hello world!'
-	dosemu.bin -I 'video {none}' -q -K hello-lfn.com | \
-	    fgrep 'Hello world!'
+	dosemu -dumb -quiet -K hello.com | tee /dev/stderr | \
+	    fgrep -q 'Hello world!'
+	dosemu -dumb -quiet -K hello-lfn.com | tee /dev/stderr | \
+	    fgrep -q 'Hello world (with long file name)!'
 
 .PHONY: install
