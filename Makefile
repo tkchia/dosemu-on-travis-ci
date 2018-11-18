@@ -21,10 +21,17 @@ install:
 	@# Install Andrew Bird et al.'s packages for dosemu2 and fdpp (FreeDOS
 	@# plus plus).
 	@#
-	@# It is also possible to use a 16-bit FreeDOS installation (e.g. via
-	@# www.dosemu.org/stable/), but this will likely use the Open Watcom C
-	@# runtime, whose license is not (yet) considered DFSG-/FSF-free (see
-	@# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=376431).
+	@# It is also possible to use the 16-bit FreeDOS kernel (e.g. via
+	@# www.dosemu.org/stable/) instead of fdpp, but this will likely use
+	@# the Open Watcom C runtime, whose license is not (yet) considered
+	@# DFSG-/FSF-free; see the discussion at https://bugs.debian.org/
+	@# cgi-bin/bugreport.cgi?bug=376431 .
+	@#
+	@# As for the command.com command interpreter, this setup currently
+	@# uses FreeDOS's FreeCOM 0.84-pre6 as compiled with gcc-ia16 (see
+	@# https://github.com/FDOS/freecom/releases/tag/com084pre6).  This is
+	@# not exactly an official stable release, but it should be enough for
+	@# our needs.
 	sudo add-apt-repository -y ppa:dosemu2/ppa
 	sudo apt-get update -y
 	sudo apt-get install -y dosemu2 fdpp
