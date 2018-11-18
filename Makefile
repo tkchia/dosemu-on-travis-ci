@@ -45,13 +45,6 @@ install:
 	cp -a boot/* $(boot_dest)
 	@# Prime the dosemu2 installation, using the "boot" directory as the
 	@# boot drive (C:).
-	@#
-	@# Stas Sergeev in Nov 2018 (https://github.com/stsp/dosemu2/commit/
-	@# 40aac533960e4cdfebfdac7bdc058f4f5f8a0d1c) patched dosemu2 to allow
-	@# $DOSEMU2_FREEDOS_DIR to specify a directory containing comcom32.exe.
-	@#
-	@# But the Ubuntu PPA might not have this patch yet, so try using
-	@# `dosemu.bin -i' if $DOSEMU2_FREEDOS_DIR does not work.
 	until \
 	    rm -rf ~/.dosemu && \
 	    (echo; echo; echo; echo; echo; echo exitemu) | \
