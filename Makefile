@@ -54,8 +54,10 @@ install:
 	    (echo; echo; echo; echo; echo; echo exitemu) | \
 	     dosemu.bin -I 'video {none}' -i$(boot_dest); \
 		do true; done
-	@# Do a quick test to see if dosemu2 works as expected.
-	dosemu.bin -I 'video {none}' -p -K hello.com | \
+	@# Do some quick tests to see if dosemu2 works as expected.
+	dosemu.bin -I 'video {none}' -q -K hello.com | \
+	    fgrep 'Hello world!'
+	dosemu.bin -I 'video {none}' -q -K hello-lfn.com | \
 	    fgrep 'Hello world!'
 
 .PHONY: install
