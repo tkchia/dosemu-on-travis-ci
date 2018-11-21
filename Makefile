@@ -38,11 +38,19 @@ install:
 	dosemu.bin --version
 	dpkg -L dosemu2
 	dpkg -L fdpp
+	exec $(MAKE) install-dot-dosemu-only
+
+install-dot-dosemu-only:
 	@# Copy out our ./boot/ directory to the installation target directory
 	@# (currently set to be somewhere in the user home directory).
 	rm -rf $(boot_dest)
 	mkdir -p $(boot_dest)
 	cp -a boot/* $(boot_dest)
+	@# If an alternate command.com is specified, copy that to our target
+	@# directory in place of FreeCOM.
+	$(if $(DOS_SHELL), \
+	    rm -f $(boot_dest)/command.com && \
+	    cp '$(DOS_SHELL)' $(boot_dest)/command.com)
 	@# Prime the dosemu2 installation, using the "boot" directory as the
 	@# boot drive (C:).
 	until \
@@ -54,10 +62,13 @@ install:
 	    (echo; echo; echo; echo; echo; echo exitemu) | \
 	     dosemu.bin -I 'video {none}' -i$(boot_dest); \
 		do true; done
+	exec $(MAKE) installcheck
+
+installcheck:
 	@# Do some quick tests to see if dosemu2 works as expected.
 	dosemu -dumb -quiet -K hello.com | tee /dev/stderr | \
 	    fgrep -q 'Hello world!'
 	dosemu -dumb -quiet -K hello-lfn.com | tee /dev/stderr | \
 	    fgrep -q 'Hello world (with long file name)!'
 
-.PHONY: install
+.PHONY: install install-dot-dosemu-only installcheck
