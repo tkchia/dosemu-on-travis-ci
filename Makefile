@@ -15,7 +15,7 @@
 # <http://www.gnu.org/licenses/>.
 
 prefix = $(HOME)/.local
-boot_dest = $(prefix)/dosemu-on-travis-ci/boot
+boot_dest = $(prefix)/share/dosemu-on-travis-ci/boot
 
 install:
 	@# Install Andrew Bird et al.'s packages for dosemu2 and fdpp (FreeDOS
