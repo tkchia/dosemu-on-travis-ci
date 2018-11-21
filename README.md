@@ -8,6 +8,6 @@ This allows us to use Travis CI to do automated testing of programs targeted at 
 
 Usage:
 
-> `make` [`-C` _source-path_`/dosemu-on-travis-ci`] `install`
+> `make` [`-C` _srcdir_`/dosemu-on-travis-ci`] `install`
 
-> `dosemu -dumb -quiet -K` _dos-program_{`.com` | `.exe`} [`>` _output-log_]
+> `dosemu -dumb -quiet -K` _prog_{`.com` | `.exe`} [`>` _log_]
