@@ -6,8 +6,14 @@ This project tackles a very small coding subtask: getting [DOSEmu2 for Linux](ht
 
 This allows us to use Travis CI to do automated testing of programs targeted at 16-bit MS-DOS.
 
-Usage:
+You can use this project as a [submodule](https://git-scm.com/docs/git-submodule) of another Git repository.
 
-> `make` [`-C` _srcdir_`/dosemu-on-travis-ci`] `install`
+## Usage
+
+To install DOSEmu:
+
+> `make` [`-C` _this-dir_] `install`
+
+Then, to run a program under DOSEmu in "dumb terminal" mode:
 
 > `dosemu -dumb -quiet -K` _prog_{`.com` | `.exe`} [`>` _log_]
