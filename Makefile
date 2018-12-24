@@ -38,6 +38,15 @@ install:
 	dosemu.bin --version
 	dpkg -L dosemu2
 	dpkg -L fdpp
+	exec $(MAKE) install-dot-dosemu-and-fix-fdpp
+
+install-dot-dosemu-and-fix-fdpp:
+	@# FDPP 0.1~beta3-0~201812230223~ubuntu16.04.1 is broken...
+	if [ -f /usr/share/fdpp/fdppkrnl.sys ] && \
+	   [ 822ea370829078e1f7e8a5962eb7bd0580222bce = \
+	     "`sha1sum /usr/share/fdpp/fdppkrnl.sys | cut -c1-40`" ]; then \
+		sudo cp -a boot/fdppkrnl.sys /usr/share/fdpp/fdppkrnl.sys; \
+	fi
 	exec $(MAKE) install-dot-dosemu-only
 
 install-dot-dosemu-only:
@@ -71,4 +80,5 @@ installcheck:
 	dosemu -dumb -quiet -K hello-lfn.com | tee /dev/stderr | \
 	    fgrep -q 'Hello world (with long file name)!'
 
-.PHONY: install install-dot-dosemu-only installcheck
+.PHONY: install install-dot-dosemu-and-fix-fdpp install-dot-dosemu-only \
+    installcheck
