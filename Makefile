@@ -21,31 +21,46 @@ install:
 	@# Install Andrew Bird et al.'s packages for dosemu2 and fdpp (FreeDOS
 	@# plus plus).
 	@#
-	@# It is also possible to use the 16-bit FreeDOS kernel (e.g. via
-	@# www.dosemu.org/stable/) instead of fdpp, but this will likely use
-	@# the Open Watcom C runtime, whose license is not (yet) considered
-	@# DFSG-/FSF-free; see the discussion at https://bugs.debian.org/
-	@# cgi-bin/bugreport.cgi?bug=376431 .
+	@# Notes:
+	@#   * One problem with Bird et al.'s package archive (ppa:dosemu2/
+	@#     ppa) is that it publishes bleeding-edge packages, which may
+	@#     fail to work properly from time to time.  For testing DOS
+	@#     programs, we want something more stable.
 	@#
-	@# As for the command.com command interpreter, this setup currently
-	@# uses FreeDOS's FreeCOM 0.84-pre6 as compiled with gcc-ia16 (see
-	@# https://github.com/FDOS/freecom/releases/tag/com084pre6).  This is
-	@# not exactly an official stable release, but it should be enough for
-	@# our needs.
-	sudo add-apt-repository -y ppa:dosemu2/ppa
+	@#     Thus, I have created a separate package archive, ppa:tkchia/
+	@#     dosemu-on-travis-ci, to host known "good" versions of packages
+	@#     from ppa:dosemu2/ppa.)
+	@#
+	@#   * Instead of fdpp, it is also possible to use the real 16-bit
+	@#     FreeDOS kernel (e.g. via www.dosemu.org/stable/).  But this
+	@#     will likely use the Open Watcom C runtime, whose license is
+	@#     not (yet) considered DFSG-/FSF-free.  See the discussion at
+	@#     https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=376431 .
+	@#
+	@#   * As for the command.com command interpreter, this setup
+	@#     currently uses FreeDOS's FreeCOM 0.84-pre6 as compiled with
+	@#     gcc-ia16 (see https://github.com/FDOS/freecom/releases/tag/
+	@#     com084pre6).
+	@#
+	@#     This is not exactly an official stable release, but it should
+	@#     be enough for our needs.
+	sudo add-apt-repository -y ppa:tkchia/dosemu-on-travis-ci
 	sudo apt-get update -y
 	sudo apt-get install -y dosemu2 fdpp
 	dosemu.bin --version
 	dpkg -L dosemu2
 	dpkg -L fdpp
-	exec $(MAKE) install-dot-dosemu-and-fix-fdpp
+	exec $(MAKE) install-dot-dosemu-and-fix-deb
 
-install-dot-dosemu-and-fix-fdpp:
-	@# FDPP 0.1~beta3-0~201812230223~ubuntu16.04.1 is broken...
-	if [ -f /usr/share/fdpp/fdppkrnl.sys ] && \
-	   [ 822ea370829078e1f7e8a5962eb7bd0580222bce = \
-	     "`sha1sum /usr/share/fdpp/fdppkrnl.sys | cut -c1-40`" ]; then \
-		sudo cp -a boot/fdppkrnl.sys /usr/share/fdpp/fdppkrnl.sys; \
+install-dot-dosemu-and-fix-deb:
+	@# The `dosemu -K' option in dosemu2 2.0~pre8-5331+23adde2~
+	@# ubuntu16.04.1 is broken (https://github.com/stsp/dosemu2/pull/739).
+	if [ -f /usr/bin/dosemu.bin ] && \
+	   [ 8ab15f4f4dada7d490e5569d73734253e004b4f0 = \
+	     "`sha1sum /usr/bin/dosemu.bin | cut -c1-40`" ]; then \
+		sudo cp -a dosemu.bin.fix /usr/bin/dosemu.bin; \
+		sudo chown root:root /usr/bin/dosemu.bin; \
+		sudo chmod go+rx /usr/bin/dosemu.bin; \
 	fi
 	exec $(MAKE) install-dot-dosemu-only
 
@@ -80,5 +95,5 @@ installcheck:
 	dosemu -dumb -quiet -K hello-lfn.com | tee /dev/stderr | \
 	    fgrep -q 'Hello world (with long file name)!'
 
-.PHONY: install install-dot-dosemu-and-fix-fdpp install-dot-dosemu-only \
+.PHONY: install install-dot-dosemu-and-fix-deb install-dot-dosemu-only \
     installcheck
