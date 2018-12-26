@@ -53,15 +53,7 @@ install:
 	exec $(MAKE) install-dot-dosemu-and-fix-deb
 
 install-dot-dosemu-and-fix-deb:
-	@# The `dosemu -K' option in dosemu2 2.0~pre8-5331+23adde2~
-	@# ubuntu16.04.1 is broken (https://github.com/stsp/dosemu2/pull/739).
-	if [ -f /usr/bin/dosemu.bin ] && \
-	   [ 8ab15f4f4dada7d490e5569d73734253e004b4f0 = \
-	     "`sha1sum /usr/bin/dosemu.bin | cut -c1-40`" ]; then \
-		sudo cp -a dosemu.bin.fix /usr/bin/dosemu.bin; \
-		sudo chown root:root /usr/bin/dosemu.bin; \
-		sudo chmod go+rx /usr/bin/dosemu.bin; \
-	fi
+	@# Nothing to fix in the installed dosemu2 + fdpp binaries for now...
 	exec $(MAKE) install-dot-dosemu-only
 
 install-dot-dosemu-only:
