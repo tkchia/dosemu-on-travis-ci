@@ -14,77 +14,35 @@
 # along with this program; ; see the file COPYING.  If not see
 # <http://www.gnu.org/licenses/>.
 
-prefix = $(HOME)/.local
-boot_dest = $(prefix)/share/dosemu-on-travis-ci/boot
-
 install:
-	@# Install Andrew Bird et al.'s packages for dosemu2 and fdpp (FreeDOS
-	@# plus plus).
+	@# OK, so there is the original dosemu by "The DOSEMU Team" (www.dosemu.org)
+	@# and the upcoming dosemu2 (stsp.github.io/dosemu2).
 	@#
-	@# Notes:
-	@#   * One problem with Bird et al.'s package archive (ppa:dosemu2/
-	@#     ppa) is that it publishes bleeding-edge packages, which may
-	@#     fail to work properly from time to time.  For testing DOS
-	@#     programs, we want something more stable.
+	@# While dosemu did --- and probably still does --- have some bugs last
+	@# I tried it, it turns out that dosemu2 is (as of writing) still very
+	@# unstable.
 	@#
-	@#     Thus, I have created a separate package archive, ppa:tkchia/
-	@#     dosemu-on-travis-ci, to host known "good" versions of packages
-	@#     from ppa:dosemu2/ppa.)
-	@#
-	@#   * Instead of fdpp, it is also possible to use the real 16-bit
-	@#     FreeDOS kernel (e.g. via www.dosemu.org/stable/).  But this
-	@#     will likely use the Open Watcom C runtime, whose license is
-	@#     not (yet) considered DFSG-/FSF-free.  See the discussion at
-	@#     https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=376431 .
-	@#
-	@#   * As for the command.com command interpreter, this setup
-	@#     currently uses FreeDOS's FreeCOM 0.84-pre6 as compiled with
-	@#     gcc-ia16 (see https://github.com/FDOS/freecom/releases/tag/
-	@#     com084pre6).
-	@#
-	@#     This is not exactly an official stable release, but it should
-	@#     be enough for our needs.
-	sudo add-apt-repository -y ppa:tkchia/dosemu-on-travis-ci
-	sudo apt-get update -y
-	sudo apt-get install -y dosemu2 fdpp
+	@# And for testing DOS programs, we do want something that is as stable
+	@# as possible.
+	sudo apt-get install -y dosemu
 	dosemu.bin --version
-	dpkg -L dosemu2
-	dpkg -L fdpp
+	dpkg -L dosemu
 	exec $(MAKE) install-dot-dosemu-and-fix-deb
 
 install-dot-dosemu-and-fix-deb:
-	@# Nothing to fix in the installed dosemu2 + fdpp binaries for now...
+	@# Nothing to fix in the installed dosemu for now...
 	exec $(MAKE) install-dot-dosemu-only
 
 install-dot-dosemu-only:
-	@# Copy out our ./boot/ directory to the installation target directory
-	@# (currently set to be somewhere in the user home directory).
-	rm -rf $(boot_dest)
-	mkdir -p $(boot_dest)
-	cp -a boot/* $(boot_dest)
-	@# If an alternate command.com is specified, copy that to our target
-	@# directory in place of FreeCOM.
-	$(if $(DOS_SHELL), \
-	    rm -f $(boot_dest)/command.com && \
-	    cp '$(DOS_SHELL)' $(boot_dest)/command.com)
-	@# Prime the dosemu2 installation, using the "boot" directory as the
-	@# boot drive (C:).
-	until \
-	    rm -rf ~/.dosemu && \
-	    (echo; echo; echo; echo; echo; echo exitemu) | \
-	     DOSEMU2_FREEDOS_DIR=$(boot_dest) dosemu.bin -I 'video {none}' || \
-	    rm -rf ~/.dosemu && \
-	    ln -sf /usr/share/fdpp/fdppkrnl.sys $(boot_dest)/fdppkrnl.sys && \
-	    (echo; echo; echo; echo; echo; echo exitemu) | \
-	     dosemu.bin -I 'video {none}' -i$(boot_dest); \
-		do true; done
+	rm -rf ~/.dosemu
+	yes | dosemu -dumb -quiet -i exitemu
 	exec $(MAKE) installcheck
 
 installcheck:
 	@# Do some quick tests to see if dosemu2 works as expected.
-	dosemu -dumb -quiet -K hello.com | tee /dev/stderr | \
+	dosemu -dumb -quiet hello.com | tee /dev/stderr | \
 	    fgrep -q 'Hello world!'
-	dosemu -dumb -quiet -K hello-lfn.com | tee /dev/stderr | \
+	dosemu -dumb -quiet hello-lfn.com | tee /dev/stderr | \
 	    fgrep -q 'Hello world (with long file name)!'
 
 .PHONY: install install-dot-dosemu-and-fix-deb install-dot-dosemu-only \

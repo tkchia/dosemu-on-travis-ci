@@ -1,4 +1,0 @@
-lastdrive=z
-device=d:\dosemu\emufs.sys
-rem temporary hack until `system -e' handles the non-%COMSPEC% case
-set=COMSPEC=c:\command.com
