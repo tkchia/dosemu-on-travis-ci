@@ -16,4 +16,4 @@ To use, you can arrange for your project's `.travis.yml` to install DOSEmu insid
 
 And, to get Travis to run a program under DOSEmu in "dumb terminal" mode:
 
-> `dosemu -dumb -quiet -K` _prog_{`.com` | `.exe`} [`>` _log_]
+> `dosemu -dumb -quiet` _prog_{`.com` | `.exe`} [`>` _log_]
