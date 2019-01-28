@@ -24,6 +24,7 @@ install:
 	@#
 	@# And for testing DOS programs, we do want something that is as stable
 	@# as possible.
+	sudo apt-get update -y
 	sudo apt-get install -y dosemu
 	dosemu.bin --version
 	dpkg -L dosemu
