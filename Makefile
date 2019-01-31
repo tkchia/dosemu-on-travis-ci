@@ -15,11 +15,11 @@
 # <http://www.gnu.org/licenses/>.
 
 install:
-	@# OK, so there is the original dosemu by "The DOSEMU Team" (www.dosemu.org)
-	@# and the upcoming dosemu2 (stsp.github.io/dosemu2).
+	@# OK, so there is the original dosemu by "The DOSEMU Team"
+	@# (www.dosemu.org) and the upcoming dosemu2 (stsp.github.io/dosemu2).
 	@#
 	@# While dosemu did --- and probably still does --- have some bugs last
-	@# I tried it, it turns out that dosemu2 is (as of writing) still very
+	@# I tried it, it turns out that dosemu2 is, as of writing, even more
 	@# unstable.
 	@#
 	@# And for testing DOS programs, we do want something that is as stable
